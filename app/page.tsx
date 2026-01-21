@@ -6,19 +6,19 @@ import { MysteryBox } from './components/MysteryBox';
 import { EasterEgg } from './components/EasterEgg';
 
 const listaNormal = [
-  { id: 1, text: 'Ssd 1tb - 300~400' },
-  { id: 2, text: 'Tenis - 160~300' },
-  { id: 3, text: 'Copo/garrafa stanley - 60~170' },
-  { id: 4, text: 'Fone qcy n70 - 250~300' },
-  { id: 5, text: 'Mouse vertical logitech/ugreen - 200~400' },
+  { id: 1, text: 'Ssd 1tb - R$400', image: '/images/ssd.png' },
+  { id: 2, text: 'Tenis - R$250', image: '/images/tenis.png' },
+  { id: 3, text: 'Copo/garrafa stanley - R$170', image: '/images/stanley.jpg' },
+  { id: 4, text: 'Fone qcy n70 - R$300', image: '/images/fone.jpg' },
+  { id: 5, text: 'Mouse vertical logitech/ugreen - R$400', image: '/images/mouse.jpg' },
 ];
 
 const listaCara = [
-  { id: 1, text: 'MacBook Pro M3 - 15k+' },
-  { id: 2, text: 'iPhone 15 Pro Max - 8k+' },
-  { id: 3, text: 'Cadeira Herman Miller - 12k' },
-  { id: 4, text: 'Monitor Odyssey G9 - 7k' },
-  { id: 5, text: 'Tesla Model 3 - 300k' },
+  { id: 1, text: 'MacBook Air - R$7000', image: '/images/macbook.jpg' },
+  { id: 2, text: 'iPhone 15 Pro Max - R$8000', image: '/images/iphone.jpg' },
+  { id: 3, text: 'RTX 5090 - R$12000', image: '/images/rtx5090.jpg' },
+  { id: 4, text: 'Steam Deck - R$5000', image: '/images/steamdeck.jpg' },
+  { id: 5, text: 'PS5 - R$3000', image: '/images/ps5.jpg' },
 ];
 
 export default function Home() {
@@ -143,7 +143,11 @@ return (
             <div className="flex flex-wrap justify-center gap-8 px-10 max-w-6xl">
               {items.map((item, index) => (
                 <div key={`${isLuxury ? 'lux-' : 'norm-'}${item.id}`} className="w-40 h-40">
-                  <MysteryBox itemText={item.text} delay={index * 0.15} />
+                  <MysteryBox 
+                    itemText={item.text} 
+                    itemImage={item.image}
+                    delay={index * 0.15} 
+                  />
                 </div>
               ))}
             </div>
