@@ -50,7 +50,7 @@ export function MysteryBox({ itemText, itemImage, delay }: MysteryBoxProps) {
                         className="absolute z-0 flex items-center justify-center"
                     >
                         <div className="w-10 h-10 bg-yellow-400 border-4 border-yellow-600 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(255,215,0,0.8)]">
-                           <span className="text-yellow-700 text-lg font-bold">1</span>
+                           <span className="text-yellow-700 text-lg font-bold">|</span>
                         </div>
                     </motion.div>
                 )}

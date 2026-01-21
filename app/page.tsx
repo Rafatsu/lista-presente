@@ -25,61 +25,61 @@ export default function Home() {
   const [hasStarted, setHasStarted] = useState(false);
   const [items, setItems] = useState(listaNormal);
   const [isLuxury, setIsLuxury] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const [showFinalBox, setShowFinalBox] = useState(false);
+  
   const controls = useAnimation();
-
   const normalAudioRef = useRef<HTMLAudioElement | null>(null);
   const epicAudioRef = useRef<HTMLAudioElement | null>(null);
+  const finalBoxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     normalAudioRef.current = new Audio('/sounds/normalsoundtrack.mp3');
     epicAudioRef.current = new Audio('/sounds/epicsoundtrack.mp3');
-
     if (normalAudioRef.current && epicAudioRef.current) {
       normalAudioRef.current.loop = true;
       epicAudioRef.current.loop = true;
       normalAudioRef.current.volume = 0.3;
       epicAudioRef.current.volume = 0.3;
     }
-
-    // Tenta tocar a música normal assim que o usuário interagir com a página
-    const startNormalMusic = () => {
-      if (!isLuxury && normalAudioRef.current) {
-        normalAudioRef.current.play().catch(() => {});
-        // Remove o listener após o primeiro play para não rodar de novo
-        window.removeEventListener('click', startNormalMusic);
-      }
-    };
-
-    window.addEventListener('click', startNormalMusic);
-
-    return () => {
-      normalAudioRef.current?.pause();
-      epicAudioRef.current?.pause();
-      window.removeEventListener('click', startNormalMusic);
-    };
   }, []);
 
+  // Timer para o botão de scroll após entrar no modo Luxury
   useEffect(() => {
     if (isLuxury) {
-      // Para a normal e toca a épica
-      normalAudioRef.current?.pause();
-      epicAudioRef.current?.play().catch(() => {});
-    } else {
-      // Se por algum motivo voltar ao normal, inverte
-      epicAudioRef.current?.pause();
-      normalAudioRef.current?.play().catch(() => {});
+      const timer = setTimeout(() => {
+        setShowScrollButton(true);
+      }, 12000); // 12 segundos
+      return () => clearTimeout(timer);
     }
   }, [isLuxury]);
 
+  useEffect(() => {
+    if (!hasStarted) return;
+    if (isLuxury) {
+      normalAudioRef.current?.pause();
+      epicAudioRef.current?.play().catch(() => {});
+    } else {
+      epicAudioRef.current?.pause();
+      normalAudioRef.current?.play().catch(() => {});
+    }
+  }, [isLuxury, hasStarted]);
+
   const handleStart = () => {
     setHasStarted(true);
-    // O play aqui funciona porque o handleStart é disparado por um clique real
     normalAudioRef.current?.play().catch(() => {});
   };
 
   const handleUnlock = () => {
     setIsLuxury(true);
     setItems(listaCara);
+  };
+
+  const scrollToFinal = () => {
+    setShowFinalBox(true);
+    setTimeout(() => {
+      finalBoxRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const triggerShake = async () => {
@@ -90,67 +90,70 @@ export default function Home() {
     });
   };
 
-return (
+  return (
     <motion.main 
       animate={controls}
-      className={`flex min-h-screen w-full overflow-hidden flex-col items-center justify-center transition-colors duration-1000 ${
+      className={`flex min-h-screen w-full flex-col items-center justify-start transition-colors duration-1000 ${
         isLuxury ? 'bg-black' : 'bg-[#0a1128]'
-      } text-white font-[family-name:var(--font-pixel)]`}
+      } text-white font-[family-name:var(--font-pixel)] pb-40`}
     >
       <AnimatePresence>
         {!hasStarted ? (
-          // TELA INICIAL COM BOTÃO
-          <motion.div
-            key="start-screen"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, scale: 1.5, filter: "blur(10px)" }}
-            className="flex flex-col items-center gap-10"
-          >
-            <h1 className="text-3xl md:text-5xl text-yellow-400 text-center drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] uppercase">
+          <motion.div key="start-screen" exit={{ opacity: 0, scale: 1.5 }} className="flex flex-col items-center gap-10 mt-40">
+            <h1 className="text-3xl md:text-5xl text-yellow-400 text-center uppercase p-4">
               Lista de presentes misteriosa da pessoa mais incrível do mundo
             </h1>
-            <button
-              onClick={handleStart}
-              className="px-8 py-4 bg-yellow-500 border-b-8 border-r-8 border-yellow-700 hover:bg-yellow-400 active:border-b-2 active:border-r-2 active:translate-y-1 transition-all text-black font-bold text-xl uppercase"
-            >
+            <button onClick={handleStart} className="px-8 py-4 bg-yellow-500 border-b-8 border-r-8 border-yellow-700 font-bold text-xl uppercase active:border-0">
               Começar
             </button>
           </motion.div>
         ) : (
-          // CONTEÚDO DO JOGO
-          <motion.div 
-            key="game-content"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center w-full"
-          >
+          <motion.div key="game-content" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center w-full">
             <AnimatePresence>
               {isLuxury && (
-                <motion.div
-                  initial={{ opacity: 1 }}
-                  animate={{ opacity: 0 }}
-                  transition={{ duration: 1.5 }}
-                  className="fixed inset-0 bg-white z-[110] pointer-events-none"
-                />
+                <motion.div initial={{ opacity: 1 }} animate={{ opacity: 0 }} transition={{ duration: 1.5 }} className="fixed inset-0 bg-white z-[110] pointer-events-none" />
               )}
             </AnimatePresence>
             
-            <h1 className={`text-2xl md:text-4xl font-bold mb-20 text-center drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] uppercase transition-colors ${isLuxury ? 'text-red-600' : 'text-yellow-400'}`}>
+            <h1 className={`text-2xl md:text-4xl font-bold mt-20 mb-20 text-center uppercase ${isLuxury ? 'text-red-600' : 'text-yellow-400'}`}>
               {isLuxury ? 'Lista de Presentes Plus' : 'Lista de Presentes'}
             </h1>
             
             <div className="flex flex-wrap justify-center gap-8 px-10 max-w-6xl">
               {items.map((item, index) => (
                 <div key={`${isLuxury ? 'lux-' : 'norm-'}${item.id}`} className="w-40 h-40">
-                  <MysteryBox 
-                    itemText={item.text} 
-                    itemImage={item.image}
-                    delay={index * 0.15} 
-                  />
+                  <MysteryBox itemText={item.text} itemImage={item.image} delay={index * 0.15} />
                 </div>
               ))}
             </div>
+
+            {/* BOTÃO DE SCROLL APÓS 5 SEGUNDOS */}
+            <AnimatePresence>
+              {showScrollButton && !showFinalBox && (
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onClick={scrollToFinal}
+                  className="mt-20 px-6 py-3 bg-red-600 text-white font-bold rounded-full animate-bounce shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+                >
+                  ↓
+                </motion.button>
+              )}
+            </AnimatePresence>
+
+            {/* ÚLTIMA CAIXA MISTERIOSA */}
+            {showFinalBox && (
+              <div ref={finalBoxRef} className="mt-[40vh] mb-60 flex flex-col items-center">
+                <h2 className="text-red-600 text-3xl mb-10 animate-pulse">O Último item misterioso</h2>
+                <div className="w-64 h-64">
+                   <MysteryBox 
+                     itemText="⭐⭐Safira⭐⭐" 
+                     itemImage="/images/safira.webp" 
+                     delay={0} 
+                   />
+                </div>
+              </div>
+            )}
 
             <EasterEgg onUnlock={handleUnlock} onShake={triggerShake} />
           </motion.div>
