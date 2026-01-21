@@ -108,7 +108,7 @@ return (
             className="flex flex-col items-center gap-10"
           >
             <h1 className="text-3xl md:text-5xl text-yellow-400 text-center drop-shadow-[4px_4px_0px_rgba(0,0,0,1)] uppercase">
-              Misterioso Lista de Presente
+              Lista de presentes misteriosa da pessoa mais incrível do mundo
             </h1>
             <button
               onClick={handleStart}
