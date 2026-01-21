@@ -9,9 +9,9 @@ import { FireParticles } from './components/FireParticles';
 const listaNormal = [
   { id: 1, text: 'Ssd 1tb - R$400', image: '/images/ssd.png' },
   { id: 2, text: 'Tenis - R$250', image: '/images/tenis.png' },
-  { id: 3, text: 'Copo/garrafa stanley - R$170', image: '/images/stanley.jpg' },
-  { id: 4, text: 'Fone qcy n70 - R$300', image: '/images/fone.jpg' },
-  { id: 5, text: 'Mouse vertical logitech/ugreen - R$400', image: '/images/mouse.jpg' },
+  { id: 3, text: 'Copo stanley - R$170', image: '/images/stanley.jpg' },
+  { id: 4, text: 'Fone bluetooth - R$250', image: '/images/fone.jpg' },
+  { id: 5, text: 'Mouse vertical logitech - R$400', image: '/images/mouse.jpg' },
 ];
 
 const listaCara = [
@@ -99,7 +99,7 @@ export default function Home() {
       } text-white font-[family-name:var(--font-pixel)] pb-40`}
     >
       {isLuxury && <FireParticles />}
-      
+
       <AnimatePresence>
         {!hasStarted ? (
           <motion.div key="start-screen" exit={{ opacity: 0, scale: 1.5 }} className="flex flex-col items-center gap-10 mt-40">
