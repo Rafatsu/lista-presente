@@ -5,6 +5,7 @@ import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { MysteryBox } from './components/MysteryBox';
 import { EasterEgg } from './components/EasterEgg';
 import { FireParticles } from './components/FireParticles';
+import { StarBackground } from './components/StarBackground';
 
 const listaNormal = [
   { id: 1, text: 'Ssd 1tb - R$400', image: '/images/ssd.png' },
@@ -98,7 +99,7 @@ export default function Home() {
         isLuxury ? 'bg-black' : 'bg-[#0a1128]'
       } text-white font-[family-name:var(--font-pixel)] pb-40`}
     >
-      {isLuxury && <FireParticles />}
+      {isLuxury ? <FireParticles /> : <StarBackground />}
 
       <AnimatePresence>
         {!hasStarted ? (
