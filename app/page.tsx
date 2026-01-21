@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
 import { MysteryBox } from './components/MysteryBox';
 import { EasterEgg } from './components/EasterEgg';
+import { FireParticles } from './components/FireParticles';
 
 const listaNormal = [
   { id: 1, text: 'Ssd 1tb - R$400', image: '/images/ssd.png' },
@@ -97,6 +98,8 @@ export default function Home() {
         isLuxury ? 'bg-black' : 'bg-[#0a1128]'
       } text-white font-[family-name:var(--font-pixel)] pb-40`}
     >
+      {isLuxury && <FireParticles />}
+      
       <AnimatePresence>
         {!hasStarted ? (
           <motion.div key="start-screen" exit={{ opacity: 0, scale: 1.5 }} className="flex flex-col items-center gap-10 mt-40">
